@@ -1,0 +1,187 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.duoying</groupId>
+	<artifactId>parent</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>parent</name>
+	<url>http://maven.apache.org</url>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.1.RELEASE</version>
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<springVersion>4.2.5.RELEASE</springVersion>
+		<hibernateVersion>5.2.0.Final</hibernateVersion>
+		<mybatisVersion>3.0.0</mybatisVersion>
+		<package.environment>dev</package.environment>
+		<java.version>1.8</java.version>
+		<ourdir>../target</ourdir>
+		<javax-validation.version>2.0.0.Final</javax-validation.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<nexus.pulbic>http://192.168.239.132:8081/repository/maven-public/</nexus.pulbic>
+		<nexus.releases>http://192.168.239.132:8081/repository/maven-releases/</nexus.releases>
+		<nexus.snapshots>http://192.168.239.132:8081/repository/mymaven/</nexus.snapshots>
+
+
+	</properties>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>Team Nexus Repository</name>
+			<url>${nexus.pulbic}</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>nexus</id>
+			<name>Team Nexus Repository</name>
+			<url>${nexus.pulbic}</url>
+		</pluginRepository>
+	</pluginRepositories>
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<name>Nexus Release Repository</name>
+			<url>${nexus.releases}</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>mymaven</name>
+			<url>${nexus.snapshots}</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<!-- 资源根目录排除各环境的配置，使用单独的资源目录来指定 -->
+				<excludes>
+					<exclude>application-dev.properties</exclude>
+					<exclude>application-test.properties</exclude>
+					<exclude>application-uat.properties</exclude>
+					<exclude>application-product.properties</exclude>
+					<exclude>application.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>application-${profiles.active}.properties</include>
+					<include>application.properties</include>
+				</includes>
+			</resource>
+		</resources>
+		<defaultGoal>compile</defaultGoal>
+
+		<plugins><plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>utf-8</encoding>
+					<source>1.8</source>
+					<target>1.8</target>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-war</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+									<type>${project.packaging}</type>
+									<destFileName>${project.name}.${project.packaging}</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<!-- <outputDirectory>${dist.console.war.dir}</outputDirectory> -->
+							<!--指定war包保存地址 -->
+							<outputDirectory>${ourdir}</outputDirectory>
+
+							<includes>
+								<include>*.war</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<!-- 本地开发环境 -->
+			<id>dev</id>
+			<properties>
+				<profiles.active>dev</profiles.active>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<!-- 准生产 -->
+			<id>uat</id>
+			<properties>
+				<profiles.active>uat</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<!-- 测试环境 -->
+			<id>test</id>
+			<properties>
+				<profiles.active>test</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<!-- 生产环境 -->
+			<id>prod</id>
+			<properties>
+				<profiles.active>prod</profiles.active>
+			</properties>
+		</profile>
+	</profiles>
+	<dependencies><!-- https://mvnrepository.com/artifact/org.apache.maven/maven-plugin-api -->
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			</dependency>
+	</dependencies>
+</project>
