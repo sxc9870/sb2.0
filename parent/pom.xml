@@ -184,4 +184,7 @@
 			<artifactId>junit</artifactId>
 			</dependency>
 	</dependencies>
+	<modules>
+        <module>../jenkinstest</module>
+    </modules>
 </project>
