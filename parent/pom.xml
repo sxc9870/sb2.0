@@ -1,12 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.duoying</groupId>
 	<artifactId>parent</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>parent</name>
 	<url>http://maven.apache.org</url>
 	<parent>
@@ -25,9 +23,9 @@
 		<javax-validation.version>2.0.0.Final</javax-validation.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<nexus.pulbic>http://192.168.239.132:8081/repository/maven-public/</nexus.pulbic>
-		<nexus.releases>http://192.168.239.132:8081/repository/maven-releases/</nexus.releases>
-		<nexus.snapshots>http://192.168.239.132:8081/repository/mymaven/</nexus.snapshots>
+		<nexus.pulbic>http://192.168.159.130:8081/repository/maven-public/</nexus.pulbic>
+		<nexus.releases>http://192.168.159.130:8081/repository/maven-releases/</nexus.releases>
+		<nexus.snapshots>http://192.168.159.130:8081/repository/mymaven/</nexus.snapshots>
 
 
 	</properties>
